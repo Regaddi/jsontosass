@@ -20,11 +20,14 @@
   ],
   "homepage": "https://github.com/Regaddi",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha"
+    "test": "./node_modules/mocha/bin/mocha",
+    "test-travis": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -R spec"
   },
   "devDependencies": {
     "chai": "3.5.0",
+    "coveralls": "2.11.9",
     "glob": "7.0.3",
+    "istanbul": "0.4.3",
     "mocha": "2.4.5"
   }
 }
