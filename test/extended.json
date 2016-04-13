@@ -1,0 +1,9 @@
+{
+    "key": {
+        "inner-key": [1,2,3],
+        "some-object": {
+            "color-black": "#000",
+            "font-family": "'Helvetica, sans-serif'"
+        }
+    }
+}

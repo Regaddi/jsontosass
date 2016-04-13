@@ -81,6 +81,12 @@ describe('jsontosass', function() {
             sass = fs.readFileSync('test/basic.scss');
             assert.equal(sass, '$key:value;');
         });
+        it('extended file conversion', function() {
+            var sass;
+            jsontosass.convertFile('test/extended.json', 'test/extended.scss');
+            sass = fs.readFileSync('test/extended.scss');
+            assert.equal(sass, '$key:(inner-key:(1,2,3),some-object:(color-black:#000,font-family:\'Helvetica, sans-serif\'));');
+        });
     });
     describe('convert()', function() {
         it('is present', function() {

@@ -87,12 +87,16 @@ default: true
 If set to `true` jsontosass generates [Sass maps](http://sass-lang.com/documentation/file.SASS_REFERENCE.html#maps) for inner objects.
 If set to `false` jsontosass generates dashed variables.
 
-# Examples
+# Example
 
 ```json
 {
     "key": {
-        "innerKey": [1,2,3]
+        "inner-key": [1,2,3],
+        "some-object": {
+            "color-black": "#000",
+            "font-family": "'Helvetica, sans-serif'"
+        }
     }
 }
 ```
@@ -104,7 +108,15 @@ jsontosass.convert(json, {
 ```
 
 ```scss
-$key:(
-  innerKey:(1,2,3)
+$key: (
+  inner-key: (
+    1,
+    2,
+    3
+  ),
+  some-object: (
+    color-black: #000,
+    font-family: 'Helvetica, sans-serif'
+  )
 );
 ```
