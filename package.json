@@ -23,8 +23,8 @@
     "test": "./node_modules/mocha/bin/mocha"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "glob": "^7.0.3",
-    "mocha": "^2.4.5"
+    "chai": "3.5.0",
+    "glob": "7.0.3",
+    "mocha": "2.4.5"
   }
 }
