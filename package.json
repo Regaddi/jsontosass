@@ -1,0 +1,30 @@
+{
+  "name": "jsontosass",
+  "description": "JSON to Sass converter for node",
+  "version": "0.0.0",
+  "maintainers": [
+    {
+      "name": "Christian Stuff",
+      "email": "christianstuff90@gmail.com",
+      "web": "https://github.com/Regaddi"
+    }
+  ],
+  "bugs": {
+    "web": "https://github.com/Regaddi/jsontosass/issues"
+  },
+  "licenses": [
+    {
+      "name": "MIT",
+      "url": "https://github.com/Regaddi/jsontosass/blob/master/LICENSE"
+    }
+  ],
+  "homepage": "https://github.com/Regaddi",
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "glob": "^7.0.3",
+    "mocha": "^2.4.5"
+  }
+}
