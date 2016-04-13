@@ -7,6 +7,9 @@ describe('jsontosass', function() {
     beforeEach(function() {
         jsontosass = require('../jsontosass.js');
         jsontosass.mergeOptions(jsontosass.defaultOptions);
+        jsontosass.mergeOptions({
+            prettify: false
+        });
     });
     after(function() {
         // delete generated test sass files
@@ -22,6 +25,22 @@ describe('jsontosass', function() {
         });
         it('is an object', function() {
             assert.isObject(jsontosass, 'jsontosass is an object');
+        });
+    });
+    describe('createColon()', function() {
+        it('creates configured spaces before colon', function() {
+            jsontosass.mergeOptions({
+                prettify: true,
+                spaceBeforeColon: 4
+            });
+            assert.equal(jsontosass.createColon(), '    : ');
+        });
+        it('creates configured spaces after colon', function() {
+            jsontosass.mergeOptions({
+                prettify: true,
+                spaceAfterColon: 4
+            });
+            assert.equal(jsontosass.createColon(), ':    ');
         });
     });
     describe('convertObject()', function() {
@@ -75,36 +94,36 @@ describe('jsontosass', function() {
         it('returns a string', function() {
             assert.typeOf(jsontosass.convert('{}'), 'string');
         });
-        it('returns Sass variables in own line when singleLine option is given', function() {
+        it('returns Sass variables in own line when prettify is enabled', function() {
             assert.equal(jsontosass.convert('{"key":"value","key2":"otherValue"}', {
-                singleLine: true
-            }), '$key:value;\n$key2:otherValue;');
+                prettify: true
+            }), '$key: value;\n$key2: otherValue;');
         });
         it('return newLines for map variables', function() {
             assert.equal(jsontosass.convert('{"key":{"key2":"value"},"key2":"otherValue"}', {
-                singleLine: true
-            }), '$key:(\n    key2:value\n);\n$key2:otherValue;');
+                prettify: true
+            }), '$key: (\n    key2: value\n);\n$key2: otherValue;');
         });
         it('respect default indent', function() {
             assert.equal(jsontosass.convert('{"key":{"key2":"value"}}', {
-                singleLine: true
-            }), '$key:(\n    key2:value\n);');
+                prettify: true
+            }), '$key: (\n    key2: value\n);');
         });
         it('respect indent with tabs', function() {
             assert.equal(jsontosass.convert('{"key":{"key2":"value"}}', {
                 indent: 'tabs',
-                singleLine: true
-            }), '$key:(\n\tkey2:value\n);');
-            assert.equal(jsontosass.convert('{"key":{"key2":{"key3":"value"}}}'), '$key:(\n\tkey2:(\n\t\tkey3:value\n\t)\n);');
+                prettify: true
+            }), '$key: (\n\tkey2: value\n);');
+            assert.equal(jsontosass.convert('{"key":{"key2":{"key3":"value"}}}'), '$key: (\n\tkey2: (\n\t\tkey3: value\n\t)\n);');
         });
         it('generate dashed variables instead of maps', function() {
             assert.equal(jsontosass.convert('{"key":{"key2":"value"}}', {
                 indent: 'tabs',
-                singleLine: true,
+                prettify: true,
                 useMaps: false
-            }), '$key-key2:value;');
-            assert.equal(jsontosass.convert('{"key":{"key2":{"key3":"value"}}}'), '$key-key2-key3:value;');
-            assert.equal(jsontosass.convert('{"key":{"key2":{"key3":[1,2,3]}}}'), '$key-key2-key3:(1,2,3);');
+            }), '$key-key2: value;');
+            assert.equal(jsontosass.convert('{"key":{"key2":{"key3":"value"}}}'), '$key-key2-key3: value;');
+            assert.equal(jsontosass.convert('{"key":{"key2":{"key3":[1,2,3]}}}'), '$key-key2-key3: (1,2,3);');
         });
     });
 });

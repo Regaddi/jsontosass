@@ -6,7 +6,9 @@
 
         this.defaultOptions = {
             indent: 4, // or 'tabs'
-            singleLine: false,
+            prettify: true,
+            spaceAfterColon: 1,
+            spaceBeforeColon: 0,
             useMaps: true
         };
 
@@ -55,7 +57,7 @@
                     case 'object':
                         this.nestLevel++;
                         if(this.options.useMaps || obj[key].hasOwnProperty('length')) {
-                            map.push(key + ':' + this.convertObject(obj[key]));
+                            map.push(key + this.createColon() + this.convertObject(obj[key]));
                         } else {
                             map.push(key + '-' + this.convertObject(obj[key]));
                         }
@@ -65,7 +67,7 @@
                         if(parseInt(key) == key) {
                             map.push(obj[key]);
                         } else {
-                            map.push(key + ':' + obj[key]);
+                            map.push(key + this.createColon() + obj[key]);
                         }
                         break;
                 }
@@ -92,6 +94,22 @@
             return indent;
         };
 
+        this.createColon = function() {
+            var spaceBeforeColon = '',
+                spaceAfterColon = '',
+                i;
+
+            if(this.options.prettify) {
+                for(i = 0; i < this.options.spaceBeforeColon; i++) {
+                    spaceBeforeColon += ' ';
+                }
+                for(i = 0; i < this.options.spaceAfterColon; i++) {
+                    spaceAfterColon += ' ';
+                }
+            }
+            return spaceBeforeColon + ':' + spaceAfterColon;
+        };
+
         this.objectToString = function(map) {
             var join;
 
@@ -104,12 +122,12 @@
 
                 join = ',';
 
-                if(this.options.singleLine && this.options.useMaps) {
+                if(this.options.prettify && this.options.useMaps) {
                     result += '\n' + this.createIndent();
                     join += '\n' + this.createIndent();
                 }
                 result += map.join(join);
-                if(this.options.singleLine && this.options.useMaps) {
+                if(this.options.prettify && this.options.useMaps) {
                     result += '\n' + this.createIndent(-1);
                 }
                 if(this.options.useMaps || map.length > 1) {
@@ -119,7 +137,7 @@
                 return result;
             } else {
                 join = ';';
-                if(this.options.singleLine) {
+                if(this.options.prettify) {
                     join += '\n';
                 }
                 join += '$';
