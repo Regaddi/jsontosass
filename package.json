@@ -23,16 +23,19 @@
     "node": ">=0.10"
   },
   "scripts": {
+    "prerelease": "npm test",
+    "release": "npm run prerelease && npm-release",
     "test": "./node_modules/mocha/bin/mocha",
     "test-travis": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -R spec"
   },
   "dependencies": {
-      "glob": "^7.0.3"
+    "glob": "^7.0.3"
   },
   "devDependencies": {
     "chai": "^3.5.0",
     "coveralls": "^2.11.9",
     "istanbul": "^0.4.3",
-    "mocha": "^2.4.5"
+    "mocha": "^2.4.5",
+    "npm-release": "^1.0.0"
   }
 }

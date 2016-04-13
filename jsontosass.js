@@ -139,7 +139,5 @@
         this.mergeOptions(this.defaultOptions);
     };
 
-    var exp = new jsontosass();
-
-    module.exports = exp;
+    module.exports = new jsontosass();
 })();
