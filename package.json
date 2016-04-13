@@ -25,6 +25,9 @@
   "scripts": {
     "prerelease": "npm test",
     "release": "npm run prerelease && npm-release",
+    "release-major": "npm run release -- major",
+    "release-minor": "npm run release -- minor",
+    "release-patch": "npm run release -- patch",
     "test": "./node_modules/mocha/bin/mocha",
     "test-travis": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -R spec"
   },
