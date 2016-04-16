@@ -15,7 +15,7 @@ This one here aims to be as flexible as possible regarding
 - generation of your Sass variables
 - indentation for maps
 - minification
-- Syntax output (Sass and SCSS) (coming soon)
+- Syntax output (Sass and SCSS)
 
 Additionally I want this module to be well tested, that's why I'm focussing on
 [TDD](https://en.wikipedia.org/wiki/Test-driven_development) here.
@@ -80,6 +80,12 @@ Sets the amount of spaces after the colon `:`.
 default: 0
 
 Sets the amount of spaces before the colon `:`.
+
+## `String` syntax
+
+default: `'scss'`
+
+Sets the syntax output. Possible values: `'sass'` or `'scss'`
 
 ## `Boolean` useMaps
 

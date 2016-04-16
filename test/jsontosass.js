@@ -13,7 +13,7 @@ describe('jsontosass', function() {
     });
     after(function() {
         // delete generated test sass files
-        glob('test/*.scss', function(er, files) {
+        glob('test/*.s[ac]ss', function(er, files) {
             files.forEach(function(file) {
                 fs.unlink(file);
             });
@@ -130,6 +130,51 @@ describe('jsontosass', function() {
             }), '$key-key2: value;');
             assert.equal(jsontosass.convert('{"key":{"key2":{"key3":"value"}}}'), '$key-key2-key3: value;');
             assert.equal(jsontosass.convert('{"key":{"key2":{"key3":[1,2,3]}}}'), '$key-key2-key3: (1,2,3);');
+        });
+    });
+    describe('options', function() {
+        it('false syntax option should throw an error', function() {
+            assert.throws(function() {
+                jsontosass.convert('{"key":"value"}', {
+                    syntax: 'wrong-syntax'
+                });
+            }, Error);
+        });
+        it('right syntax option but with capital letters should not throw an error', function() {
+            assert.doesNotThrow(function() {
+                jsontosass.convert('{"key":"value"}', {
+                    syntax: 'SCSS'
+                });
+            }, Error);
+        });
+    });
+    describe('Sass syntax', function() {
+        it('no semicolon in output', function() {
+            assert.isNull(jsontosass.convert('{"key":"value"}', {
+                syntax: 'sass'
+            }).match(/;/g));
+        });
+        it('setting prettify to false should prettify anyway', function() {
+            assert.equal(jsontosass.convert('{"key":{"key2":"value"}}', {
+                syntax: 'sass'
+            }), '$key: (\n    key2: value\n)');
+        });
+        it('basic file conversion', function() {
+            var sass;
+            jsontosass.convertFile('test/basic.json', 'test/basic.sass', {
+                syntax: 'sass'
+            });
+            sass = fs.readFileSync('test/basic.sass');
+            assert.equal(sass, '$key: value');
+        });
+        it('extended file conversion', function() {
+            var sass;
+            jsontosass.convertFile('test/extended.json', 'test/extended.sass', {
+                indent: 'tabs',
+                syntax: 'sass'
+            });
+            sass = fs.readFileSync('test/extended.sass');
+            assert.equal(sass, '$key: (\n\tinner-key: (\n\t\t1,\n\t\t2,\n\t\t3\n\t),\n\tsome-object: (\n\t\tcolor-black: #000,\n\t\tfont-family: \'Helvetica, sans-serif\'\n\t)\n)');
         });
     });
 });

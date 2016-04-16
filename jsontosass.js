@@ -9,6 +9,7 @@
             prettify: true,
             spaceAfterColon: 1,
             spaceBeforeColon: 0,
+            syntax: 'scss',
             useMaps: true
         };
 
@@ -99,7 +100,7 @@
                 spaceAfterColon = '',
                 i;
 
-            if(this.options.prettify) {
+            if(this.shouldPrettify()) {
                 for(i = 0; i < this.options.spaceBeforeColon; i++) {
                     spaceBeforeColon += ' ';
                 }
@@ -110,47 +111,90 @@
             return spaceBeforeColon + ':' + spaceAfterColon;
         };
 
-        this.objectToString = function(map) {
-            var join;
+        this.createLineSplit = function() {
+            var join ;
 
             if(this.nestLevel > 0) {
-                var result = '';
-
-                if(this.options.useMaps || map.length > 1) {
-                    result += '(';
-                }
-
                 join = ',';
 
-                if(this.options.prettify && this.options.useMaps) {
-                    result += '\n' + this.createIndent();
+                if(this.shouldPrettifyMap()) {
                     join += '\n' + this.createIndent();
                 }
-                result += map.join(join);
-                if(this.options.prettify && this.options.useMaps) {
-                    result += '\n' + this.createIndent(-1);
-                }
-                if(this.options.useMaps || map.length > 1) {
-                    result += ')';
-                }
-
-                return result;
             } else {
                 join = ';';
-                if(this.options.prettify) {
+                if(this.shouldPrettify()) {
                     join += '\n';
                 }
                 join += '$';
-                return '$' + map.join(join) + ';';
             }
+            return join;
+        };
+
+        this.createObjectAfter = function(map) {
+            if(this.nestLevel > 0) {
+                var after = '';
+
+                if(this.shouldPrettifyMap()) {
+                    after += '\n' + this.createIndent(-1);
+                }
+                if(this.options.useMaps || map.length > 1) {
+                    after += ')';
+                }
+                return after;
+            } else {
+                if(this.options.syntax == 'scss') {
+                    return ';';
+                } else {
+                    return '';
+                }
+            }
+        };
+
+        this.createObjectBefore = function(map) {
+            if(this.nestLevel > 0) {
+                var before = '';
+                if(this.options.useMaps || map.length > 1) {
+                    before += '(';
+                }
+                if(this.shouldPrettifyMap()) {
+                    before += '\n' + this.createIndent();
+                }
+                return before;
+            } else {
+                return '$';
+            }
+        };
+
+        this.objectToString = function(map) {
+            return this.createObjectBefore(map) + map.join(this.createLineSplit()) + this.createObjectAfter(map);
         };
 
         this.mergeOptions = function(options) {
             options = options || {};
 
             for(var key in options) {
-                var value = options[key];
+                var value = this.validateOption(key, options[key]);
                 this.options[key] = value;
+            }
+        };
+
+        this.shouldPrettify = function() {
+            return (this.options.prettify || this.options.syntax == 'sass');
+        };
+
+        this.shouldPrettifyMap = function() {
+            return (this.options.prettify && this.options.useMaps) || this.options.syntax == 'sass';
+        };
+
+        this.validateOption = function(key, value) {
+            switch(key) {
+                case 'syntax':
+                    if(['sass','scss'].indexOf(value.toLowerCase()) === -1) {
+                        throw new Error('invalid value `' + value + '` for option syntax');
+                    }
+                    return value.toLowerCase();
+                default:
+                    return value;
             }
         };
 
