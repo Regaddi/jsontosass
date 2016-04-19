@@ -29,7 +29,7 @@
     "release-major": "npm run release -- major",
     "release-minor": "npm run release -- minor",
     "release-patch": "npm run release -- patch",
-    "test": "./node_modules/mocha/bin/mocha",
+    "test": "./node_modules/semistandard/bin/cmd.js && ./node_modules/mocha/bin/mocha",
     "test-travis": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -R spec"
   },
   "devDependencies": {
@@ -38,6 +38,15 @@
     "glob": "^7.0.3",
     "istanbul": "^0.4.3",
     "mocha": "^2.4.5",
-    "npm-release": "^1.0.0"
+    "npm-release": "^1.0.0",
+    "semistandard": "^7.0.5"
+  },
+  "semistandard": {
+    "globals": [
+      "after",
+      "beforeEach",
+      "describe",
+      "it"
+    ]
   }
 }
