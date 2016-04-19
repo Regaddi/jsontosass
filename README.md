@@ -1,6 +1,8 @@
 [![npm version](https://badge.fury.io/js/jsontosass.svg)](https://badge.fury.io/js/jsontosass)
 [![Build Status](https://travis-ci.org/Regaddi/jsontosass.svg?branch=master)](https://travis-ci.org/Regaddi/jsontosass)
 [![Coverage Status](https://coveralls.io/repos/github/Regaddi/jsontosass/badge.svg?branch=master)](https://coveralls.io/github/Regaddi/jsontosass?branch=master)
+[![js-semistandard-style](https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg?style=flat-square)](https://github.com/Flet/semistandard)
+
 
 # jsontosass
 
@@ -127,3 +129,12 @@ $key: (
   )
 );
 ```
+
+# Contribution
+
+You're free to contribute to this project by submitting [issues](https://github.com/Regaddi/jsontosass/issues) and/or [pull requests](https://github.com/Regaddi/jsontosass/pulls). This project is test-driven, so keep in mind that every change and new feature should be covered by tests.
+This project uses the [semistandard code style](https://github.com/Flet/semistandard).
+
+# License
+
+This project is licensed under [MIT](https://github.com/Regaddi/jsontosass/blob/master/LICENSE).
