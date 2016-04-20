@@ -80,6 +80,16 @@ describe('jsontosass', function () {
     it('is present', function () {
       assert.isFunction(jsontosass.convertFile);
     });
+    it('should use defaultOptions when no options are given', function (done) {
+      var testFile = 'test/basic.scss';
+      jsontosass.convertFile('test/basic.json', testFile, function () {
+        fs.readFile(testFile, 'utf8', function (err, sass) {
+          if (err) throw err;
+          assert.equal(sass, '$key: value;');
+          done();
+        });
+      });
+    });
     it('basic file conversion', function (done) {
       var testFile = 'test/basic.scss';
       jsontosass.convertFile('test/basic.json', testFile, { prettify: false }, function () {
