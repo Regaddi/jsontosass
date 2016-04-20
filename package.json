@@ -22,6 +22,7 @@
   "engines": {
     "node": ">=0.10"
   },
+  "files": ["jsontosass.js"],
   "main": "jsontosass.js",
   "scripts": {
     "prerelease": "npm test",
@@ -50,6 +51,7 @@
     ]
   },
   "dependencies": {
+    "extend": "^3.0.0",
     "repeat-string": "^1.5.4"
   }
 }

@@ -1,3 +1,5 @@
+var extend = require('extend');
+var fs = require('fs');
 var repeat = require('repeat-string');
 
 var JsonToSass = function () {
@@ -34,11 +36,23 @@ var JsonToSass = function () {
    * @param {String} fileIn The filename to the input JSON file.
    * @param {String} fileOut The filename to the output Sass file.
    */
-  this.convertFile = function (fileIn, fileOut, options) {
-    var fs = require('fs');
+  this.convertFile = function (fileIn, fileOut, options, cb) {
+    if (typeof options === 'function') {
+      cb = options;
+      options = {};
+    }
     var json = fs.readFileSync(fileIn);
     var sass = this.convert(json, options);
-
+    fs.writeFile(fileOut, sass, cb);
+  };
+  /**
+   * Converts a given JSON file represented by filename fileIn to a Sass file represented by fileOut.
+   * @param {String} fileIn The filename to the input JSON file.
+   * @param {String} fileOut The filename to the output Sass file.
+   */
+  this.convertFileSync = function (fileIn, fileOut, options) {
+    var json = fs.readFileSync(fileIn);
+    var sass = this.convert(json, options);
     fs.writeFileSync(fileOut, sass);
   };
   /**
@@ -163,10 +177,11 @@ var JsonToSass = function () {
 
     for (var key in options) {
       if (options.hasOwnProperty(key)) {
-        var value = this.validateOption(key, options[key]);
-        this.options[key] = value;
+        this.validateOption(key, options[key]);
       }
     }
+
+    this.options = extend(this.options, options);
   };
 
   this.shouldPrettify = function () {

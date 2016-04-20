@@ -39,7 +39,7 @@ var jsontosass = require('jsontosass');
 
 # Usage
 
-There are 2 main functions available.
+There are 3 main functions available.
 
 ## convert()
 
@@ -52,10 +52,19 @@ jsontosass.convert(/* String */jsonInput, /* Object */options);
 ## convertFile()
 
 ```javascript
-jsontosass.convertFile(/* String */jsonInputFilePath, /* String */sassOutputFilePath, /* Objects */options);
+jsontosass.convertFile(/* String */jsonInputFilePath, /* String */sassOutputFilePath, /* Objects */options, /* Function */callback);
 ```
 
 `convertFile()` does not return anything. It automatically creates the output file if it's nonexistent and writes the generated Sass code into it.
+This happens asynchronously. The callback is called afterwards.
+
+## convertFileSync()
+
+```javascript
+jsontosass.convertFileSync(/* String */jsonInputFilePath, /* String */sassOutputFilePath, /* Objects */options);
+```
+
+Same as `convertFile()` but synchronously and obviously without callback parameter.
 
 # Options
 

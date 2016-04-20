@@ -3,6 +3,14 @@ var fs = require('fs');
 var glob = require('glob');
 var jsontosass;
 
+function removeFiles () {
+  glob('test/*.s[ac]ss', function (er, files) {
+    files.forEach(function (file) {
+      fs.unlink(file);
+    });
+  });
+}
+
 describe('jsontosass', function () {
   beforeEach(function () {
     jsontosass = require('../jsontosass.js');
@@ -13,11 +21,7 @@ describe('jsontosass', function () {
   });
   after(function () {
     // delete generated test sass files
-    glob('test/*.s[ac]ss', function (er, files) {
-      files.forEach(function (file) {
-        fs.unlink(file);
-      });
-    });
+    removeFiles();
   });
   describe('module', function () {
     it('is present', function () {
@@ -72,18 +76,43 @@ describe('jsontosass', function () {
     });
   });
   describe('convertFile()', function () {
+    after(function () {
+      removeFiles();
+    });
     it('is present', function () {
       assert.isFunction(jsontosass.convertFile);
     });
     it('basic file conversion', function () {
       var sass;
-      jsontosass.convertFile('test/basic.json', 'test/basic.scss');
+      jsontosass.convertFile('test/basic.json', 'test/basic.scss', function () {
+        sass = fs.readFileSync('test/basic.scss');
+        assert.equal(sass, '$key:value;');
+      });
+    });
+    it('extended file conversion', function () {
+      var sass;
+      jsontosass.convertFile('test/extended.json', 'test/extended.scss', function () {
+        sass = fs.readFileSync('test/extended.scss');
+        assert.equal(sass, "$key:(inner-key:(1,2,3),some-object:(color-black:#000,font-family:'Helvetica, sans-serif'));");
+      });
+    });
+  });
+  describe('convertFileSync()', function () {
+    after(function () {
+      removeFiles();
+    });
+    it('is present', function () {
+      assert.isFunction(jsontosass.convertFileSync);
+    });
+    it('basic file conversion', function () {
+      var sass;
+      jsontosass.convertFileSync('test/basic.json', 'test/basic.scss');
       sass = fs.readFileSync('test/basic.scss');
       assert.equal(sass, '$key:value;');
     });
     it('extended file conversion', function () {
       var sass;
-      jsontosass.convertFile('test/extended.json', 'test/extended.scss');
+      jsontosass.convertFileSync('test/extended.json', 'test/extended.scss');
       sass = fs.readFileSync('test/extended.scss');
       assert.equal(sass, "$key:(inner-key:(1,2,3),some-object:(color-black:#000,font-family:'Helvetica, sans-serif'));");
     });
@@ -163,18 +192,20 @@ describe('jsontosass', function () {
       var sass;
       jsontosass.convertFile('test/basic.json', 'test/basic.sass', {
         syntax: 'sass'
+      }, function () {
+        sass = fs.readFileSync('test/basic.sass');
+        assert.equal(sass, '$key: value');
       });
-      sass = fs.readFileSync('test/basic.sass');
-      assert.equal(sass, '$key: value');
     });
     it('extended file conversion', function () {
       var sass;
       jsontosass.convertFile('test/extended.json', 'test/extended.sass', {
         indent: 'tabs',
         syntax: 'sass'
+      }, function () {
+        sass = fs.readFileSync('test/extended.sass');
+        assert.equal(sass, "$key: (\n\tinner-key: (\n\t\t1,\n\t\t2,\n\t\t3\n\t),\n\tsome-object: (\n\t\tcolor-black: #000,\n\t\tfont-family: 'Helvetica, sans-serif'\n\t)\n)");
       });
-      sass = fs.readFileSync('test/extended.sass');
-      assert.equal(sass, "$key: (\n\tinner-key: (\n\t\t1,\n\t\t2,\n\t\t3\n\t),\n\tsome-object: (\n\t\tcolor-black: #000,\n\t\tfont-family: 'Helvetica, sans-serif'\n\t)\n)");
     });
   });
 });
