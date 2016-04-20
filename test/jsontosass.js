@@ -1,7 +1,7 @@
 var assert = require('chai').assert;
 var fs = require('fs');
 var glob = require('glob');
-var jsontosass;
+var jsontosass = require('../jsontosass.js');
 
 function removeFiles () {
   glob('test/*.s[ac]ss', function (er, files) {
@@ -12,13 +12,6 @@ function removeFiles () {
 }
 
 describe('jsontosass', function () {
-  beforeEach(function () {
-    jsontosass = require('../jsontosass.js');
-    jsontosass.mergeOptions(jsontosass.defaultOptions);
-    jsontosass.mergeOptions({
-      prettify: false
-    });
-  });
   after(function () {
     // delete generated test sass files
     removeFiles();
@@ -48,6 +41,11 @@ describe('jsontosass', function () {
     });
   });
   describe('convertObject()', function () {
+    beforeEach(function () {
+      jsontosass.mergeOptions({
+        prettify: false
+      });
+    });
     it('is present', function () {
       assert.isFunction(jsontosass.convertObject);
     });
@@ -82,18 +80,24 @@ describe('jsontosass', function () {
     it('is present', function () {
       assert.isFunction(jsontosass.convertFile);
     });
-    it('basic file conversion', function () {
-      var sass;
-      jsontosass.convertFile('test/basic.json', 'test/basic.scss', function () {
-        sass = fs.readFileSync('test/basic.scss');
-        assert.equal(sass, '$key:value;');
+    it('basic file conversion', function (done) {
+      var testFile = 'test/basic.scss';
+      jsontosass.convertFile('test/basic.json', testFile, { prettify: false }, function () {
+        fs.readFile(testFile, 'utf8', function (err, sass) {
+          if (err) throw err;
+          assert.equal(sass, '$key:value;');
+          done();
+        });
       });
     });
-    it('extended file conversion', function () {
-      var sass;
-      jsontosass.convertFile('test/extended.json', 'test/extended.scss', function () {
-        sass = fs.readFileSync('test/extended.scss');
-        assert.equal(sass, "$key:(inner-key:(1,2,3),some-object:(color-black:#000,font-family:'Helvetica, sans-serif'));");
+    it('extended file conversion', function (done) {
+      var testFile = 'test/extended.scss';
+      jsontosass.convertFile('test/extended.json', testFile, { prettify: false }, function () {
+        fs.readFile(testFile, 'utf8', function (err, sass) {
+          if (err) throw err;
+          assert.equal(sass, "$key:(inner-key:(1,2,3),some-object:(color-black:#000,font-family:'Helvetica, sans-serif'));");
+          done();
+        });
       });
     });
   });
@@ -106,14 +110,14 @@ describe('jsontosass', function () {
     });
     it('basic file conversion', function () {
       var sass;
-      jsontosass.convertFileSync('test/basic.json', 'test/basic.scss');
-      sass = fs.readFileSync('test/basic.scss');
+      jsontosass.convertFileSync('test/basic.json', 'test/basic.scss', { prettify: false });
+      sass = fs.readFileSync('test/basic.scss', 'utf8');
       assert.equal(sass, '$key:value;');
     });
     it('extended file conversion', function () {
       var sass;
-      jsontosass.convertFileSync('test/extended.json', 'test/extended.scss');
-      sass = fs.readFileSync('test/extended.scss');
+      jsontosass.convertFileSync('test/extended.json', 'test/extended.scss', { prettify: false });
+      sass = fs.readFileSync('test/extended.scss', 'utf8');
       assert.equal(sass, "$key:(inner-key:(1,2,3),some-object:(color-black:#000,font-family:'Helvetica, sans-serif'));");
     });
   });
@@ -145,20 +149,22 @@ describe('jsontosass', function () {
       }), '$key: (\n    key2: value\n);');
     });
     it('respect indent with tabs', function () {
-      assert.equal(jsontosass.convert('{"key":{"key2":"value"}}', {
+      var options = {
         indent: 'tabs',
         prettify: true
-      }), '$key: (\n\tkey2: value\n);');
-      assert.equal(jsontosass.convert('{"key":{"key2":{"key3":"value"}}}'), '$key: (\n\tkey2: (\n\t\tkey3: value\n\t)\n);');
+      };
+      assert.equal(jsontosass.convert('{"key":{"key2":"value"}}', options), '$key: (\n\tkey2: value\n);');
+      assert.equal(jsontosass.convert('{"key":{"key2":{"key3":"value"}}}', options), '$key: (\n\tkey2: (\n\t\tkey3: value\n\t)\n);');
     });
     it('generate dashed variables instead of maps', function () {
-      assert.equal(jsontosass.convert('{"key":{"key2":"value"}}', {
+      var options = {
         indent: 'tabs',
         prettify: true,
         useMaps: false
-      }), '$key-key2: value;');
-      assert.equal(jsontosass.convert('{"key":{"key2":{"key3":"value"}}}'), '$key-key2-key3: value;');
-      assert.equal(jsontosass.convert('{"key":{"key2":{"key3":[1,2,3]}}}'), '$key-key2-key3: (1,2,3);');
+      };
+      assert.equal(jsontosass.convert('{"key":{"key2":"value"}}', options), '$key-key2: value;');
+      assert.equal(jsontosass.convert('{"key":{"key2":{"key3":"value"}}}', options), '$key-key2-key3: value;');
+      assert.equal(jsontosass.convert('{"key":{"key2":{"key3":[1,2,3]}}}', options), '$key-key2-key3: (1,2,3);');
     });
   });
   describe('options', function () {

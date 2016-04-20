@@ -25,6 +25,7 @@ var JsonToSass = function () {
   this.convert = function (json, options) {
     var parsedJSON;
 
+    this.mergeOptions(this.defaultOptions);
     this.mergeOptions(options);
 
     parsedJSON = JSON.parse(json);
@@ -181,7 +182,7 @@ var JsonToSass = function () {
       }
     }
 
-    this.options = extend(this.options, options);
+    this.options = extend({}, this.defaultOptions, options);
   };
 
   this.shouldPrettify = function () {
