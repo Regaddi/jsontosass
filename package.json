@@ -1,7 +1,7 @@
 {
   "name": "jsontosass",
   "description": "JSON to Sass converter for node",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "maintainers": [
     {
       "name": "Christian Stuff",
@@ -22,7 +22,9 @@
   "engines": {
     "node": ">=0.10"
   },
-  "files": ["jsontosass.js"],
+  "files": [
+    "jsontosass.js"
+  ],
   "main": "jsontosass.js",
   "scripts": {
     "prerelease": "npm test",
