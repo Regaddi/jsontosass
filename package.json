@@ -48,5 +48,8 @@
       "describe",
       "it"
     ]
+  },
+  "dependencies": {
+    "repeat-string": "^1.5.4"
   }
 }
