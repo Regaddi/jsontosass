@@ -176,11 +176,9 @@ var JsonToSass = function () {
   this.mergeOptions = function (options) {
     options = options || {};
 
-    for (var key in options) {
-      if (options.hasOwnProperty(key)) {
-        this.validateOption(key, options[key]);
-      }
-    }
+    Object.keys(options).forEach(function (key) {
+      this.validateOption(key, options[key]);
+    }.bind(this));
 
     this.options = extend({}, this.defaultOptions, options);
   };
