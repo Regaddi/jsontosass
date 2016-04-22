@@ -88,31 +88,24 @@ var JsonToSass = function () {
     return this.objectToString(map);
   };
 
-  this.createIndent = function (levelAdjustment) {
-    var indent = '';
-
-    levelAdjustment = levelAdjustment || 0;
-
-    for (var l = 0; l < this.nestLevel + levelAdjustment; l++) {
-      if (typeof this.options.indent === 'number' && this.options.indent >= 0) {
-        indent = repeat(' ', this.options.indent);
-      }
-      if (this.options.indent === 'tabs') {
-        indent += '\t';
-      }
-    }
-    return indent;
+  /**
+   * Generates the leading spaces/tabs to indent the code
+   * @private
+   * @param {int} Indentation amount
+   * @return {String} The spaces
+   */
+  this.createIndent = function (indentation) {
+    return this.options.indent === 'tabs'
+      ? repeat('\t', indentation)
+      : repeat(' ', indentation * this.options.indent);
   };
 
   this.createColon = function () {
-    var spaceBeforeColon = '';
-    var spaceAfterColon = '';
-
-    if (this.shouldPrettify()) {
-      spaceBeforeColon = repeat(' ', this.options.spaceBeforeColon);
-      spaceAfterColon = repeat(' ', this.options.spaceAfterColon);
+    if (!this.shouldPrettify()) {
+      return ':';
     }
-    return spaceBeforeColon + ':' + spaceAfterColon;
+    return repeat(' ', this.options.spaceBeforeColon) +
+      ':' + repeat(' ', this.options.spaceAfterColon);
   };
 
   this.createLineSplit = function () {
@@ -122,7 +115,7 @@ var JsonToSass = function () {
       join = ',';
 
       if (this.shouldPrettifyMap()) {
-        join += '\n' + this.createIndent();
+        join += '\n' + this.createIndent(this.nestLevel);
       }
     } else {
       join = ';';
@@ -134,39 +127,36 @@ var JsonToSass = function () {
     return join;
   };
 
-  this.createObjectAfter = function (map) {
-    if (this.nestLevel > 0) {
-      var after = '';
+  this.createStatementTerminator = function () {
+    return this.options.syntax === 'scss' ? ';' : '';
+  };
 
-      if (this.shouldPrettifyMap()) {
-        after += '\n' + this.createIndent(-1);
-      }
-      if (this.options.useMaps || map.length > 1) {
-        after += ')';
-      }
-      return after;
-    } else {
-      if (this.options.syntax === 'scss') {
-        return ';';
-      } else {
-        return '';
-      }
+  this.createObjectAfter = function (map) {
+    if (this.nestLevel === 0) {
+      return this.createStatementTerminator();
     }
+    var after = '';
+    if (this.shouldPrettifyMap()) {
+      after += '\n' + this.createIndent(this.nestLevel - 1);
+    }
+    if (this.options.useMaps || map.length > 1) {
+      after += ')';
+    }
+    return after;
   };
 
   this.createObjectBefore = function (map) {
-    if (this.nestLevel > 0) {
-      var before = '';
-      if (this.options.useMaps || map.length > 1) {
-        before += '(';
-      }
-      if (this.shouldPrettifyMap()) {
-        before += '\n' + this.createIndent();
-      }
-      return before;
-    } else {
+    if (this.nestLevel === 0) {
       return '$';
     }
+    var before = '';
+    if (this.options.useMaps || map.length > 1) {
+      before += '(';
+    }
+    if (this.shouldPrettifyMap()) {
+      before += '\n' + this.createIndent(this.nestLevel);
+    }
+    return before;
   };
 
   this.objectToString = function (map) {
