@@ -3,9 +3,9 @@ var fs = require('fs');
 var repeat = require('repeat-string');
 
 var JsonToSass = function () {
-  this.nestLevel = 0;
+  var nestLevel = 0;
 
-  this.defaultOptions = {
+  var defaultOptions = {
     indent: 4, // or 'tabs'
     prettify: true,
     spaceAfterColon: 1,
@@ -25,12 +25,12 @@ var JsonToSass = function () {
   this.convert = function (json, options) {
     var parsedJSON;
 
-    this.mergeOptions(this.defaultOptions);
-    this.mergeOptions(options);
+    mergeOptions(defaultOptions);
+    mergeOptions(options);
 
     parsedJSON = JSON.parse(json);
 
-    return this.convertObject(parsedJSON);
+    return convertObject(parsedJSON);
   };
   /**
    * Converts a given JSON file represented by filename fileIn to a Sass file represented by fileOut.
@@ -61,32 +61,32 @@ var JsonToSass = function () {
    * @param {Object} obj The JSON object.
    * @return {String} The Sass map as a string.
    */
-  this.convertObject = function (obj) {
+  function convertObject (obj) {
     var map = [];
 
     for (var key in obj) {
       switch (typeof obj[key]) {
         case 'object':
-          this.nestLevel++;
+          nestLevel++;
           if (this.options.useMaps || obj[key].hasOwnProperty('length')) {
-            map.push(key + this.createColon() + this.convertObject(obj[key]));
+            map.push(key + createColon() + convertObject(obj[key]));
           } else {
-            map.push(key + '-' + this.convertObject(obj[key]));
+            map.push(key + '-' + convertObject(obj[key]));
           }
-          this.nestLevel--;
+          nestLevel--;
           break;
         default:
           if (key.match(/^[0-9]+$/)) {
             map.push(obj[key]);
           } else {
-            map.push(key + this.createColon() + obj[key]);
+            map.push(key + createColon() + obj[key]);
           }
           break;
       }
     }
 
-    return this.objectToString(map);
-  };
+    return objectToString(map);
+  }
 
   /**
    * Generates the leading spaces/tabs to indent the code
@@ -94,94 +94,94 @@ var JsonToSass = function () {
    * @param {int} Indentation amount
    * @return {String} The spaces
    */
-  this.createIndent = function (indentation) {
+  function createIndent (indentation) {
     return this.options.indent === 'tabs'
       ? repeat('\t', indentation)
       : repeat(' ', indentation * this.options.indent);
-  };
+  }
 
-  this.createColon = function () {
-    if (!this.shouldPrettify()) {
+  function createColon () {
+    if (!shouldPrettify()) {
       return ':';
     }
     return repeat(' ', this.options.spaceBeforeColon) +
       ':' + repeat(' ', this.options.spaceAfterColon);
-  };
+  }
 
-  this.createLineSplit = function () {
+  function createLineSplit () {
     var join;
 
-    if (this.nestLevel > 0) {
+    if (nestLevel > 0) {
       join = ',';
 
-      if (this.shouldPrettifyMap()) {
-        join += '\n' + this.createIndent(this.nestLevel);
+      if (shouldPrettifyMap()) {
+        join += '\n' + createIndent(nestLevel);
       }
     } else {
       join = ';';
-      if (this.shouldPrettify()) {
+      if (shouldPrettify()) {
         join += '\n';
       }
       join += '$';
     }
     return join;
-  };
+  }
 
-  this.createStatementTerminator = function () {
+  function createStatementTerminator () {
     return this.options.syntax === 'scss' ? ';' : '';
-  };
+  }
 
-  this.createObjectAfter = function (map) {
-    if (this.nestLevel === 0) {
-      return this.createStatementTerminator();
+  function createObjectAfter (map) {
+    if (nestLevel === 0) {
+      return createStatementTerminator();
     }
     var after = '';
-    if (this.shouldPrettifyMap()) {
-      after += '\n' + this.createIndent(this.nestLevel - 1);
+    if (shouldPrettifyMap()) {
+      after += '\n' + createIndent(nestLevel - 1);
     }
     if (this.options.useMaps || map.length > 1) {
       after += ')';
     }
     return after;
-  };
+  }
 
-  this.createObjectBefore = function (map) {
-    if (this.nestLevel === 0) {
+  function createObjectBefore (map) {
+    if (nestLevel === 0) {
       return '$';
     }
     var before = '';
     if (this.options.useMaps || map.length > 1) {
       before += '(';
     }
-    if (this.shouldPrettifyMap()) {
-      before += '\n' + this.createIndent(this.nestLevel);
+    if (shouldPrettifyMap()) {
+      before += '\n' + createIndent(nestLevel);
     }
     return before;
-  };
+  }
 
-  this.objectToString = function (map) {
-    return this.createObjectBefore(map) + map.join(this.createLineSplit()) + this.createObjectAfter(map);
-  };
+  function objectToString (map) {
+    return createObjectBefore(map) + map.join(createLineSplit()) + createObjectAfter(map);
+  }
 
-  this.mergeOptions = function (options) {
+  function mergeOptions (options) {
     options = options || {};
 
     Object.keys(options).forEach(function (key) {
-      this.validateOption(key, options[key]);
-    }.bind(this));
+      validateOption(key, options[key]);
+    });
 
-    this.options = extend({}, this.defaultOptions, options);
-  };
+    this.options = extend({}, defaultOptions, options);
+  }
 
-  this.shouldPrettify = function () {
+  function shouldPrettify () {
     return (this.options.prettify || this.options.syntax === 'sass');
-  };
+  }
 
-  this.shouldPrettifyMap = function () {
+  function shouldPrettifyMap () {
     return (this.options.prettify && this.options.useMaps) || this.options.syntax === 'sass';
-  };
+  }
 
-  this.validateOption = function (key, value) {
+  function validateOption (key, value) {
     switch (key) {
       case 'syntax':
         if (['sass', 'scss'].indexOf(value.toLowerCase()) === -1) {
@@ -191,9 +191,9 @@ var JsonToSass = function () {
       default:
         return value;
     }
-  };
+  }
 
-  this.mergeOptions(this.defaultOptions);
+  mergeOptions(defaultOptions);
 };
 
 module.exports = new JsonToSass();

@@ -24,55 +24,39 @@ describe('jsontosass', function () {
       assert.isObject(jsontosass, 'jsontosass is an object');
     });
   });
-  describe('createColon()', function () {
-    it('creates configured spaces before colon', function () {
-      jsontosass.mergeOptions({
-        prettify: true,
-        spaceBeforeColon: 4
-      });
-      assert.equal(jsontosass.createColon(), '    : ');
-    });
-    it('creates configured spaces after colon', function () {
-      jsontosass.mergeOptions({
-        prettify: true,
-        spaceAfterColon: 4
-      });
-      assert.equal(jsontosass.createColon(), ':    ');
-    });
-  });
-  describe('convertObject()', function () {
-    beforeEach(function () {
-      jsontosass.mergeOptions({
-        prettify: false
-      });
-    });
-    it('is present', function () {
-      assert.isFunction(jsontosass.convertObject);
-    });
-    it('creates Sass variable named $key on root level', function () {
-      assert.equal(jsontosass.convertObject({
-        key: 'value'
-      }), '$key:value;');
-    });
-    it('creates Sass variables named by JSON key for multiple entries', function () {
-      assert.equal(jsontosass.convertObject({
-        key: 'value',
-        key2: 'otherValue'
-      }), '$key:value;$key2:otherValue;');
-    });
-    it('creates Sass map for nested object', function () {
-      assert.equal(jsontosass.convertObject({
-        key: {
-          key2: 'value'
-        }
-      }), '$key:(key2:value);');
-    });
-    it('creates Sass list for JSON array', function () {
-      assert.equal(jsontosass.convertObject({
-        key: [1, 2, 3]
-      }), '$key:(1,2,3);');
-    });
-  });
+  // describe('convertObject()', function () {
+  //   beforeEach(function () {
+  //     jsontosass.mergeOptions({
+  //       prettify: false
+  //     });
+  //   });
+  //   it('is present', function () {
+  //     assert.isFunction(jsontosass.convertObject);
+  //   });
+  //   it('creates Sass variable named $key on root level', function () {
+  //     assert.equal(jsontosass.convertObject({
+  //       key: 'value'
+  //     }), '$key:value;');
+  //   });
+  //   it('creates Sass variables named by JSON key for multiple entries', function () {
+  //     assert.equal(jsontosass.convertObject({
+  //       key: 'value',
+  //       key2: 'otherValue'
+  //     }), '$key:value;$key2:otherValue;');
+  //   });
+  //   it('creates Sass map for nested object', function () {
+  //     assert.equal(jsontosass.convertObject({
+  //       key: {
+  //         key2: 'value'
+  //       }
+  //     }), '$key:(key2:value);');
+  //   });
+  //   it('creates Sass list for JSON array', function () {
+  //     assert.equal(jsontosass.convertObject({
+  //       key: [1, 2, 3]
+  //     }), '$key:(1,2,3);');
+  //   });
+  // });
   describe('convertFile()', function () {
     after(function () {
       removeFiles();
@@ -142,6 +126,18 @@ describe('jsontosass', function () {
     });
     it('returns a string', function () {
       assert.typeOf(jsontosass.convert('{}'), 'string');
+    });
+    it('creates configured spaces before colon', function () {
+      assert.equal(jsontosass.convert('{"key":"value"}', {
+        prettify: true,
+        spaceBeforeColon: 4
+      }), '$key    : value;');
+    });
+    it('creates configured spaces after colon', function () {
+      assert.equal(jsontosass.convert('{"key":"value"}', {
+        prettify: true,
+        spaceAfterColon: 4
+      }), '$key:    value;');
     });
     it('returns Sass variables in own line when prettify is enabled', function () {
       assert.equal(jsontosass.convert('{"key":"value","key2":"otherValue"}', {
