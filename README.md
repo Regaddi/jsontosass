@@ -3,7 +3,6 @@
 [![Coverage Status](https://coveralls.io/repos/github/Regaddi/jsontosass/badge.svg?branch=master)](https://coveralls.io/github/Regaddi/jsontosass?branch=master)
 [![js-semistandard-style](https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg?style=flat-square)](https://github.com/Flet/semistandard)
 
-
 # jsontosass
 
 Oh, no! Not another JSON to Sass converter! Why did you do that?
@@ -27,14 +26,14 @@ JSON to Sass converter that will definitely be the last one you'll ever need!
 
 # Installation
 
-You can easily install this package with [npm](https://www.npmjs.com):
+You can install this package with [npm](https://www.npmjs.com):
 
     npm install jsontosass
 
-After that you can access `jsontosass` easily by using `require`
+After that you should be able to access `jsontosass` by using `require`
 
 ```javascript
-var jsontosass = require('jsontosass');
+var jsontosass = require("jsontosass");
 ```
 
 # Usage
@@ -44,7 +43,7 @@ There are 3 main functions available.
 ## convert()
 
 ```javascript
-jsontosass.convert(/* String */jsonInput, /* Object */options);
+jsontosass.convert(/* String */ jsonInput, /* Object */ options);
 ```
 
 `convert()` returns the generated Sass code as a string.
@@ -52,7 +51,12 @@ jsontosass.convert(/* String */jsonInput, /* Object */options);
 ## convertFile()
 
 ```javascript
-jsontosass.convertFile(/* String */jsonInputFilePath, /* String */sassOutputFilePath, /* Objects */options, /* Function */callback);
+jsontosass.convertFile(
+  /* String */ jsonInputFilePath,
+  /* String */ sassOutputFilePath,
+  /* Objects */ options,
+  /* Function */ callback
+);
 ```
 
 `convertFile()` does not return anything. It automatically creates the output file if it's nonexistent and writes the generated Sass code into it.
@@ -61,7 +65,11 @@ This happens asynchronously. The callback is called afterwards.
 ## convertFileSync()
 
 ```javascript
-jsontosass.convertFileSync(/* String */jsonInputFilePath, /* String */sassOutputFilePath, /* Objects */options);
+jsontosass.convertFileSync(
+  /* String */ jsonInputFilePath,
+  /* String */ sassOutputFilePath,
+  /* Objects */ options
+);
 ```
 
 Same as `convertFile()` but synchronously and obviously without callback parameter.
@@ -109,19 +117,19 @@ If set to `false` jsontosass generates dashed variables.
 
 ```json
 {
-    "key": {
-        "inner-key": [1,2,3],
-        "some-object": {
-            "color-black": "#000",
-            "font-family": "'Helvetica, sans-serif'"
-        }
+  "key": {
+    "inner-key": [1, 2, 3],
+    "some-object": {
+      "color-black": "#000",
+      "font-family": "'Helvetica, sans-serif'"
     }
+  }
 }
 ```
 
 ```javascript
 jsontosass.convert(json, {
-    indent: 2
+  indent: 2
 });
 ```
 
@@ -134,7 +142,7 @@ $key: (
   ),
   some-object: (
     color-black: #000,
-    font-family: 'Helvetica, sans-serif'
+    font-family: "Helvetica, sans-serif"
   )
 );
 ```
