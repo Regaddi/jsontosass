@@ -66,13 +66,14 @@ var JsonToSass = function () {
     var map = [];
 
     for (var key in obj) {
+      const sassKey = /^[a-zA-Z0-9]+$/.test(key) ? paramCase(key) : key;
       switch (typeof obj[key]) {
         case 'object':
           nestLevel++;
           if (this.options.useMaps || obj[key].hasOwnProperty('length')) {
-            map.push(paramCase(key) + createColon() + convertObject(obj[key]));
+            map.push(sassKey + createColon() + convertObject(obj[key]));
           } else {
-            map.push(paramCase(key) + '-' + convertObject(obj[key]));
+            map.push(sassKey + '-' + convertObject(obj[key]));
           }
           nestLevel--;
           break;
@@ -80,7 +81,7 @@ var JsonToSass = function () {
           if (key.match(/^[0-9]+$/)) {
             map.push(obj[key]);
           } else {
-            map.push(paramCase(key) + createColon() + obj[key]);
+            map.push(sassKey + createColon() + obj[key]);
           }
           break;
       }

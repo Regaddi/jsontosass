@@ -4,6 +4,7 @@
         "someObject": {
             "colorBlack": "#000",
             "fontFamily": "'Helvetica, sans-serif'"
-        }
+        },
+        ".special": 1
     }
 }
