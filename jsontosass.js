@@ -1,6 +1,7 @@
 var extend = require('extend');
 var fs = require('fs');
 var repeat = require('repeat-string');
+var { paramCase } = require('param-case');
 
 var JsonToSass = function () {
   var nestLevel = 0;
@@ -69,9 +70,9 @@ var JsonToSass = function () {
         case 'object':
           nestLevel++;
           if (this.options.useMaps || obj[key].hasOwnProperty('length')) {
-            map.push(key + createColon() + convertObject(obj[key]));
+            map.push(paramCase(key) + createColon() + convertObject(obj[key]));
           } else {
-            map.push(key + '-' + convertObject(obj[key]));
+            map.push(paramCase(key) + '-' + convertObject(obj[key]));
           }
           nestLevel--;
           break;
@@ -79,7 +80,7 @@ var JsonToSass = function () {
           if (key.match(/^[0-9]+$/)) {
             map.push(obj[key]);
           } else {
-            map.push(key + createColon() + obj[key]);
+            map.push(paramCase(key) + createColon() + obj[key]);
           }
           break;
       }
