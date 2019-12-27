@@ -6,7 +6,7 @@ var jsontosass = require('../jsontosass.js');
 function removeFiles () {
   glob('test/*.s[ac]ss', function (er, files) {
     files.forEach(function (file) {
-      fs.unlink(file);
+      fs.unlinkSync(file);
     });
   });
 }
