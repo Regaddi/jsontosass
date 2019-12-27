@@ -4,6 +4,8 @@ node_js:
   - "11"
   - "10"
   - "8"
-before_script: "npm run pretest"
+before_script:
+  - "npm install"
+  - "npm run pretest"
 script: "npm run-script coverage"
 after_script: "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
