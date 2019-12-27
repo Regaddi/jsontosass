@@ -1,36 +1,40 @@
 [![npm version](https://badge.fury.io/js/jsontosass.svg)](https://badge.fury.io/js/jsontosass)
 [![Build Status](https://travis-ci.org/Regaddi/jsontosass.svg?branch=master)](https://travis-ci.org/Regaddi/jsontosass)
 [![Coverage Status](https://coveralls.io/repos/github/Regaddi/jsontosass/badge.svg?branch=master)](https://coveralls.io/github/Regaddi/jsontosass?branch=master)
-[![js-semistandard-style](https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg?style=flat-square)](https://github.com/Flet/semistandard)
+[![js-semistandard-style](https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg?style=flat-square)](https://github.com/standard/semistandard)
 
 # jsontosass
 
 Oh, no! Not another JSON to Sass converter! Why did you do that?
 
-Simple answer: there was no JSON to Sass converter out there (up to this point)
+Short answer: there was no JSON to Sass converter out there (up to this point)
 that was flexible enough to suite my needs to e.g. satisfy my
 [scss-lint](https://github.com/brigade/scss-lint) configuration.
 
 This one here aims to be as flexible as possible regarding
 
-- generation of your Sass variables
+- generation of Sass variables
 - indentation for maps
 - minification
 - Syntax output (Sass and SCSS)
 
-Additionally I want this module to be well tested, that's why I'm focussing on
-[TDD](https://en.wikipedia.org/wiki/Test-driven_development) here.
+Additionally this module should be well tested, that's why 
+[Test driven development (TDD)](https://en.wikipedia.org/wiki/Test-driven_development) has focus.
 
-What you will get with this package is a well maintained, documented and tested
-JSON to Sass converter that will definitely be the last one you'll ever need!
+This package aims to be a well maintained, documented and tested
+JSON to Sass converter that will be the last one you'll ever need!
 
 # Installation
 
-You can install this package with [npm](https://www.npmjs.com):
+Install this package with [npm](https://www.npmjs.com):
 
     npm install jsontosass
 
-After that you should be able to access `jsontosass` by using `require`
+or
+
+    yarn install jsontosass
+
+If all went well you should be able to access `jsontosass` by using `require`
 
 ```javascript
 var jsontosass = require("jsontosass");
@@ -72,7 +76,7 @@ jsontosass.convertFileSync(
 );
 ```
 
-Same as `convertFile()` but synchronously and obviously without callback parameter.
+Same as `convertFile()` but synchronously and without callback parameter.
 
 # Options
 
@@ -80,7 +84,7 @@ Same as `convertFile()` but synchronously and obviously without callback paramet
 
 default: 4
 
-If a number greater 0 is given, jsontosass will indent using the given number of spaces. Optionally you can set it to `'tabs'`. This will indent using `\t`. Indentation is only made, when `prettify` is set to `true`.
+If a number greater 0 is given, jsontosass will indent using the given number of spaces. Optionally set it to `'tabs'`. This will indent using `\t`. Indentation is only made, when `prettify` is set to `true`.
 
 ## `Boolean` prettify
 
@@ -149,7 +153,7 @@ $key: (
 
 # Contribution
 
-You're free to contribute to this project by submitting [issues](https://github.com/Regaddi/jsontosass/issues) and/or [pull requests](https://github.com/Regaddi/jsontosass/pulls). This project is test-driven, so keep in mind that every change and new feature should be covered by tests.
+Feel free to contribute to this project by submitting [issues](https://github.com/Regaddi/jsontosass/issues) and/or [pull requests](https://github.com/Regaddi/jsontosass/pulls). This project is test-driven, so keep in mind that every change and new feature should be covered by tests.
 This project uses the [semistandard code style](https://github.com/Flet/semistandard).
 
 # License

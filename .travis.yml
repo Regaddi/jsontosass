@@ -1,5 +1,10 @@
 language: node_js
 node_js:
+  - "12"
+  - "11"
+  - "10"
+  - "8"
+  - "6"
   - "5"
   - "5.1"
   - "4"
@@ -10,5 +15,5 @@ node_js:
   - "0.11"
   - "0.10"
 before_script: "npm run pretest"
-script: "npm run-script test-travis"
+script: "npm run-script coverage"
 after_script: "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
