@@ -1,21 +1,17 @@
-var assert = require('chai').assert;
-var fs = require('fs');
-var glob = require('glob');
-var jsontosass = require('../jsontosass.js');
+const assert = require('chai').assert;
+const fs = require('fs');
+const glob = require('glob');
+const jsontosass = require('../jsontosass.js');
 
 function removeFiles () {
   glob('test/*.s[ac]ss', function (er, files) {
     files.forEach(function (file) {
-      fs.unlink(file);
+      fs.unlinkSync(file);
     });
   });
 }
 
 describe('jsontosass', function () {
-  after(function () {
-    // delete generated test sass files
-    removeFiles();
-  });
   describe('module', function () {
     it('is present', function () {
       assert.isDefined(jsontosass, 'jsontosass is defined');
@@ -65,7 +61,7 @@ describe('jsontosass', function () {
       assert.isFunction(jsontosass.convertFile);
     });
     it('should use defaultOptions when no options are given', function (done) {
-      var testFile = 'test/basic.scss';
+      const testFile = 'test/basic.scss';
       jsontosass.convertFile('test/basic.json', testFile, function () {
         fs.readFile(testFile, 'utf8', function (err, sass) {
           if (err) throw err;
@@ -75,7 +71,7 @@ describe('jsontosass', function () {
       });
     });
     it('basic file conversion', function (done) {
-      var testFile = 'test/basic.scss';
+      const testFile = 'test/basic.scss';
       jsontosass.convertFile('test/basic.json', testFile, { prettify: false }, function () {
         fs.readFile(testFile, 'utf8', function (err, sass) {
           if (err) throw err;
@@ -85,7 +81,7 @@ describe('jsontosass', function () {
       });
     });
     it('extended file conversion', function (done) {
-      var testFile = 'test/extended.scss';
+      const testFile = 'test/extended.scss';
       jsontosass.convertFile('test/extended.json', testFile, { prettify: false }, function () {
         fs.readFile(testFile, 'utf8', function (err, sass) {
           if (err) throw err;
@@ -103,15 +99,13 @@ describe('jsontosass', function () {
       assert.isFunction(jsontosass.convertFileSync);
     });
     it('basic file conversion', function () {
-      var sass;
       jsontosass.convertFileSync('test/basic.json', 'test/basic.scss', { prettify: false });
-      sass = fs.readFileSync('test/basic.scss', 'utf8');
+      const sass = fs.readFileSync('test/basic.scss', 'utf8');
       assert.equal(sass, '$key:value;');
     });
     it('extended file conversion', function () {
-      var sass;
       jsontosass.convertFileSync('test/extended.json', 'test/extended.scss', { prettify: false });
-      sass = fs.readFileSync('test/extended.scss', 'utf8');
+      const sass = fs.readFileSync('test/extended.scss', 'utf8');
       assert.equal(sass, "$key:(inner-key:(1,2,3),some-object:(color-black:#000,font-family:'Helvetica, sans-serif'));");
     });
   });
@@ -155,7 +149,7 @@ describe('jsontosass', function () {
       }), '$key: (\n    key2: value\n);');
     });
     it('respect indent with tabs', function () {
-      var options = {
+      const options = {
         indent: 'tabs',
         prettify: true
       };
@@ -163,7 +157,7 @@ describe('jsontosass', function () {
       assert.equal(jsontosass.convert('{"key":{"key2":{"key3":"value"}}}', options), '$key: (\n\tkey2: (\n\t\tkey3: value\n\t)\n);');
     });
     it('generate dashed variables instead of maps', function () {
-      var options = {
+      const options = {
         indent: 'tabs',
         prettify: true,
         useMaps: false
@@ -201,21 +195,19 @@ describe('jsontosass', function () {
       }), '$key: (\n    key2: value\n)');
     });
     it('basic file conversion', function () {
-      var sass;
       jsontosass.convertFile('test/basic.json', 'test/basic.sass', {
         syntax: 'sass'
       }, function () {
-        sass = fs.readFileSync('test/basic.sass');
+        const sass = fs.readFileSync('test/basic.sass');
         assert.equal(sass, '$key: value');
       });
     });
     it('extended file conversion', function () {
-      var sass;
       jsontosass.convertFile('test/extended.json', 'test/extended.sass', {
         indent: 'tabs',
         syntax: 'sass'
       }, function () {
-        sass = fs.readFileSync('test/extended.sass');
+        const sass = fs.readFileSync('test/extended.sass');
         assert.equal(sass, "$key: (\n\tinner-key: (\n\t\t1,\n\t\t2,\n\t\t3\n\t),\n\tsome-object: (\n\t\tcolor-black: #000,\n\t\tfont-family: 'Helvetica, sans-serif'\n\t)\n)");
       });
     });
