@@ -70,7 +70,7 @@ var JsonToSass = function () {
       switch (typeof obj[key]) {
         case 'object':
           nestLevel++;
-          if (this.options.useMaps || obj[key].hasOwnProperty('length')) {
+          if (this.options.useMaps || obj[key].length) {
             map.push(sassKey + createColon() + convertObject(obj[key]));
           } else {
             map.push(sassKey + '-' + convertObject(obj[key]));

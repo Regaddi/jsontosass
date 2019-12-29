@@ -27,23 +27,28 @@
   ],
   "main": "jsontosass.js",
   "scripts": {
+    "coverage": "nyc npm run test",
     "prerelease": "npm test",
     "release": "npm run prerelease && npm-release",
     "release-major": "npm run release -- major",
     "release-minor": "npm run release -- minor",
     "release-patch": "npm run release -- patch",
     "pretest": "semistandard",
-    "test": "mocha",
-    "test-travis": "istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec"
+    "test": "mocha"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "coveralls": "^2.11.9",
-    "glob": "^7.0.3",
-    "istanbul": "^0.4.3",
-    "mocha": "^2.4.5",
+    "chai": "^4.2.0",
+    "coveralls": "^3.0.9",
+    "glob": "^7.1.6",
+    "mocha": "^6.2.2",
     "npm-release": "^1.0.0",
-    "semistandard": "^7.0.5"
+    "nyc": "^15.0.0",
+    "semistandard": "^14.2.0"
+  },
+  "nyc": {
+    "check-coverage": true,
+    "reporter": "lcov",
+    "report-dir": "coverage"
   },
   "semistandard": {
     "globals": [
