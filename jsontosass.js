@@ -78,7 +78,7 @@ var JsonToSass = function () {
           nestLevel--;
           break;
         default:
-          if (key.match(/^[0-9]+$/)) {
+          if (Array.isArray(obj)) {
             map.push(obj[key]);
           } else {
             map.push(sassKey + createColon() + obj[key]);
