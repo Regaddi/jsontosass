@@ -208,7 +208,7 @@ describe('jsontosass', function () {
         syntax: 'sass'
       }, function () {
         const sass = fs.readFileSync('test/extended.sass', { encoding: 'utf-8' });
-        assert.equal(sass, "$key: (\n\tinner-key: (\n\t\t1,\n\t\t2,\n\t\t3\n\t),\n\tsome-object: (\n\t\tcolor-black: #000,\n\t\tfont-family: 'Helvetica, sans-serif'\n\t),\n\t.special:1\n)");
+        assert.equal(sass, "$key: (\n\tinner-key: (\n\t\t1,\n\t\t2,\n\t\t3\n\t),\n\tsome-object: (\n\t\tcolor-black: #000,\n\t\tfont-family: 'Helvetica, sans-serif'\n\t),\n\t.special: 1\n)");
       });
     });
   });
