@@ -85,7 +85,7 @@ describe('jsontosass', function () {
       jsontosass.convertFile('test/extended.json', testFile, { prettify: false }, function () {
         fs.readFile(testFile, 'utf8', function (err, sass) {
           if (err) throw err;
-          assert.equal(sass, "$key:(inner-key:(1,2,3),some-object:(color-black:#000,font-family:'Helvetica, sans-serif'));");
+          assert.equal(sass, "$key:(inner-key:(1,2,3),some-object:(color-black:#000,font-family:'Helvetica, sans-serif'),.special:1);");
           done();
         });
       });
@@ -106,7 +106,7 @@ describe('jsontosass', function () {
     it('extended file conversion', function () {
       jsontosass.convertFileSync('test/extended.json', 'test/extended.scss', { prettify: false });
       const sass = fs.readFileSync('test/extended.scss', 'utf8');
-      assert.equal(sass, "$key:(inner-key:(1,2,3),some-object:(color-black:#000,font-family:'Helvetica, sans-serif'));");
+      assert.equal(sass, "$key:(inner-key:(1,2,3),some-object:(color-black:#000,font-family:'Helvetica, sans-serif'),.special:1);");
     });
   });
   describe('convert()', function () {
@@ -208,7 +208,7 @@ describe('jsontosass', function () {
         syntax: 'sass'
       }, function () {
         const sass = fs.readFileSync('test/extended.sass', { encoding: 'utf-8' });
-        assert.equal(sass, "$key: (\n\tinner-key: (\n\t\t1,\n\t\t2,\n\t\t3\n\t),\n\tsome-object: (\n\t\tcolor-black: #000,\n\t\tfont-family: 'Helvetica, sans-serif'\n\t)\n)");
+        assert.equal(sass, "$key: (\n\tinner-key: (\n\t\t1,\n\t\t2,\n\t\t3\n\t),\n\tsome-object: (\n\t\tcolor-black: #000,\n\t\tfont-family: 'Helvetica, sans-serif'\n\t),\n\t.special: 1\n)");
       });
     });
   });
